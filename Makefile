@@ -10,8 +10,8 @@ valgrind   = not-set
 openmp     = not-set
 shared     = not-set
 cc         = not-set
-prefix     = ~/local
-gklib_path = ~/local
+prefix     = $(HOME)/local
+gklib_path = $(HOME)/local
 
 
 # Basically proxies everything to the builddir cmake.
@@ -24,10 +24,10 @@ REALWIDTH = "\#define REALTYPEWIDTH 32"
 # Process configuration options.
 CONFIG_FLAGS = -DCMAKE_VERBOSE_MAKEFILE=1
 ifneq ($(gklib_path), not-set)
-    CONFIG_FLAGS += -DGKLIB_PATH=$(abspath $(gklib_path))
+    CONFIG_FLAGS += -DGKLIB_PATH="$(abspath $(gklib_path))"
 endif
 ifneq ($(prefix), not-set)
-    CONFIG_FLAGS += -DCMAKE_INSTALL_PREFIX=$(prefix)
+    CONFIG_FLAGS += -DCMAKE_INSTALL_PREFIX="$(abspath $(prefix))"
 endif
 ifneq ($(i64), not-set)
     IDXWIDTH  = "\#define IDXTYPEWIDTH 64"
@@ -73,7 +73,7 @@ echo $(IDXWIDTH) > $(BUILDDIR)/xinclude/metis.h
 echo $(REALWIDTH) >> $(BUILDDIR)/xinclude/metis.h
 cat include/metis.h >> $(BUILDDIR)/xinclude/metis.h
 cp include/CMakeLists.txt $(BUILDDIR)/xinclude
-cd $(BUILDDIR) && cmake $(CURDIR) $(CONFIG_FLAGS)
+cd $(BUILDDIR) && cmake "$(CURDIR)" $(CONFIG_FLAGS)
 endef
 
 all clean install:
