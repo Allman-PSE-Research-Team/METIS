@@ -29,7 +29,6 @@ graph_t *CompressGraph(ctrl_t *ctrl, idx_t nvtxs, idx_t *xadj, idx_t *adjncy,
   idx_t *cxadj, *cadjncy, *cvwgt, *mark, *map;
   ikv_t *keys;
   graph_t *graph=NULL;
-  int aborted=0;   /* set if the grouping scan stops early (graph incompressible) */
 
   mark = ismalloc(nvtxs, -1, "CompressGraph: mark");
   map  = ismalloc(nvtxs, -1, "CompressGraph: map");
@@ -81,24 +80,24 @@ graph_t *CompressGraph(ctrl_t *ctrl, idx_t nvtxs, idx_t *xadj, idx_t *adjncy,
       /* cnvtxs only grows, so once it reaches the rejection threshold the graph
          is provably incompressible; stop the (verification-heavy) scan early.
          Same predicate as the post-loop test, so the accept/reject decision and
-         all output are unchanged -- only the reject-path group count stops short. */
-      if (cnvtxs >= COMPRESSION_FRACTION*nvtxs) {
-        aborted = 1;
+         all output are unchanged -- only the reject-path group count stops short.
+         This is the sole break in the outer loop, so afterward i<nvtxs iff we
+         aborted here (i==nvtxs on normal completion). */
+      if (cnvtxs >= COMPRESSION_FRACTION*nvtxs)
         break;
-      }
     }
   }
 
-  /* When the scan aborted early, cnvtxs is only a partial group count (the true
-     final count would be larger), so nvtxs-cnvtxs OVERSTATES the reduction -- it is
-     an upper bound, not the exact value. We mark it with '~' rather than scanning
-     on to make it exact, since the graph is being rejected as incompressible either
-     way. On the accept path the scan always runs to completion, so cnvtxs (and this
-     figure) is exact. */
+  /* i < nvtxs means the loop aborted early (graph incompressible): cnvtxs is then
+     only a partial group count (the true final count would be larger), so
+     nvtxs-cnvtxs OVERSTATES the reduction -- it is an upper bound, not the exact
+     value. Mark it '<= ... (approx)' rather than scanning on to make it exact, since
+     the graph is rejected as incompressible either way. On the accept path the loop
+     always completes (i == nvtxs), so the figure is exact and printed unmarked. */
   IFSET(ctrl->dbglvl, METIS_DBG_INFO,
         printf("  Compression: reduction in # of vertices: %s%"PRIDX"%s.\n",
-               (aborted ? "<=" : ""), nvtxs-cnvtxs,
-               (aborted ? " (approx; incompressible, scan stopped early)" : "")));
+               (i < nvtxs ? "<=" : ""), nvtxs-cnvtxs,
+               (i < nvtxs ? " (approx; incompressible, scan stopped early)" : "")));
 
 
   if (cnvtxs < COMPRESSION_FRACTION*nvtxs) {
