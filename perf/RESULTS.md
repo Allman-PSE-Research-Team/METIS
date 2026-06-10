@@ -8,10 +8,15 @@ to baseline output (verified: all 10 configs `cmp`-equal to `perf/ref/` for `see
 - Gate: `perf/harness.sh verify perf/ref` — must show `pass=11 fail=0` (byte-identical output).
 - **Two measurement modes, deliberately:**
   - **Per-phase attribution** (`perf/harness.sh bench`): uses **`-dbglvl=2`** to read METIS's
-    internal phase timers (coarsen/match/contract/initpart/refine). Used to attribute a change
-    to the phase it touches. NOTE: `-dbglvl=2` adds timer-call overhead that **inflates ndmetis
-    totals ~2×** (1.4s real → ~2.9s timed) because the per-phase timers fire thousands of times
-    in the deep dissection recursion; treat harness *totals* as relative-only, especially for nd.
+    internal phase timers (coarsen/match/contract/initpart/refine). Its purpose is *attribution*,
+    not headline timing: the cit-Patents total drifts ±5–8% run-to-run, which swamps a 0.05–0.1 s
+    single-phase win, so the phase column is the only way to see (e.g.) matching go 0.88→0.78 s or
+    refine move in isolation — and to confirm an opt touches only the phase it should.
+    **Measured `-dbglvl=2` overhead (same binary, min-of-3):** gpmetis kway cit_100 **−2.1%**,
+    mdual_100 **−2.4%** (both within noise → gpmetis phase tables are accurate, because its timers
+    fire only ~once per coarsening/refinement *level*). **ndmetis +113%** (1.38 s → 2.94 s) — its
+    timers fire per dissection node (~n/120 of them), so **the nd `-dbglvl=2` numbers are NOT valid
+    timings and are used only to see which files/phase a change hits; the nd headline is dbglvl=0.**
   - **Headline speedup** (`perf/compare.sh`): runs with **NO `-dbglvl` flag, i.e. dbglvl=0**
     (the program default, confirmed at programs/cmdline_*.c), so there is zero timer overhead.
     This is an **interleaved A/B**: baseline binary and current binary alternated per repeat so
@@ -22,9 +27,14 @@ to baseline output (verified: all 10 configs `cmp`-equal to `perf/ref/` for `see
 - Machine: Apple Silicon (10 cores), Darwin 25.5.0. Runs serial, machine otherwise idle.
 - Raw rows accumulate in `perf/RESULTS.tsv`.
 
-## Baseline (serial, min of 3) — seconds
+## Baseline phase breakdown (serial, min of 3, `-dbglvl=2`) — for attribution only
 
-| config | metis | coarsen | contract | initpart | refine |
+The `metis` column here is the **dbglvl=2** total. For gpmetis that equals the dbglvl=0 total
+(overhead ~0, measured above). For **nd_mdual the total is timer-inflated ~2×** — its true
+dbglvl=0 time is ~1.4 s (see headline tables); the phase split below is shown only to locate
+where nd time goes, not as absolute seconds.
+
+| config | metis(dbg2) | coarsen | contract | initpart | refine |
 |---|---|---|---|---|---|
 | kway_cit_10 | 8.108 | 2.476 | 1.585 | 3.055 | 1.796 |
 | kway_cit_50 | 11.202 | 2.508 | 1.617 | 2.672 | 5.008 |
@@ -35,7 +45,7 @@ to baseline output (verified: all 10 configs `cmp`-equal to `perf/ref/` for `see
 | rb_mdual_10 | 0.195 | 0.148 | 0.088 | 0.000 | 0.020 |
 | rb_mdual_50 | 0.277 | 0.197 | 0.114 | 0.002 | 0.038 |
 | rb_mdual_100 | 0.332 | 0.230 | 0.133 | 0.004 | 0.049 |
-| nd_mdual | 2.895 | 0.465 | 0.266 | 0.424 | 1.864 |
+| nd_mdual ⚠inflated | 2.895 | 0.465 | 0.266 | 0.424 | 1.864 |
 
 Reference edgecuts (seed=12345): cit k10/50/100 = 1673921 / 2741107 / 3213730;
 mdual kway 11157/24100/32113; rb 10313/22831/30689; nd opcount 5.964e+10.
