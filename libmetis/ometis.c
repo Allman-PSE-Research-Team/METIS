@@ -685,12 +685,8 @@ void MMDOrder(ctrl_t *ctrl, graph_t *graph, idx_t *order, idx_t lastvtx)
   for (i=0; i<nvtxs; i++)
     order[label[i]] = firstvtx+iperm[i]-1;
 
-  /* Relabel the vertices so that it starts from 0 */
-  for (i=0; i<nvtxs+1; i++)
-    xadj[i]--;
-  k = xadj[nvtxs];
-  for (i=0; i<k; i++)
-    adjncy[i]--;
+  /* No need to restore xadj/adjncy to 0-based: genmmd destroys adjncy in place,
+   * and every caller frees this graph immediately after MMDOrder returns. */
 
   WCOREPOP;
 }
