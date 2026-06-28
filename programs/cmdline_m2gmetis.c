@@ -42,7 +42,7 @@ static gk_StringMap_t gtype_options[] = {
 static char helpstr[][100] =
 {
 " ",
-"Usage: m2gmetis [options] <meshfile> <graphfile>",
+"Usage: qm2gmetis [options] <meshfile> <graphfile>",
 " ",
 " Required parameters",
 "    meshfile    Stores the input mesh.",
@@ -69,8 +69,8 @@ static char helpstr[][100] =
 
 static char shorthelpstr[][100] = {
 " ",
-"   Usage: m2gmetis [options] <meshfile> <graphfile>",
-"          use 'm2gmetis -help' for a summary of the options.",
+"   Usage: qm2gmetis [options] <meshfile> <graphfile>",
+"          use 'qm2gmetis -help' for a summary of the options.",
 ""
 };
  

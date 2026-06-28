@@ -1,24 +1,24 @@
-# METIS 
+# QMETIS 
 
-METIS is a set of serial programs for partitioning graphs, partitioning finite element meshes, 
-and producing fill reducing orderings for sparse matrices. The algorithms implemented in 
+QMETIS is a modularity-default fork of METIS for partitioning graphs, partitioning finite element meshes, 
+and producing fill reducing orderings for sparse matrices. The algorithms implemented in upstream 
 METIS are based on the multilevel recursive-bisection, multilevel k-way, and multi-constraint 
 partitioning schemes developed in our lab.
 
-##  Downloading METIS
+##  Downloading QMETIS
 
-You can download METIS by simply cloning it using the command:
+Clone the QMETIS source tree using the command:
 ```
-git clone https://github.com/KarypisLab/METIS.git
+git clone <qmetis-repository-url>
 ```
 
-## Building standalone METIS binaries and library
+## Building standalone QMETIS binaries and library
 
-To build METIS you can follow the instructions below:
+To build QMETIS you can follow the instructions below:
 
 ### Dependencies
 
-General dependencies for building METIS are: gcc, cmake, build-essential. 
+General dependencies for building QMETIS are: gcc, cmake, build-essential. 
 In Ubuntu systems these can be obtained from the apt package manager (e.g., apt-get install cmake, etc) 
 
 ```
@@ -30,16 +30,16 @@ In addition, you need to download and install
 [GKlib](https://github.com/KarypisLab/GKlib) by following the instructions there. 
 
 
-### Building and installing METIS  
+### Building and installing QMETIS  
 
-METIS is primarily configured by passing options to make config. For example:
+QMETIS is primarily configured by passing options to make config. For example:
 
 ```
 make config shared=1 cc=gcc prefix=~/local
 make install
 ```
 
-will configure METIS to be built as a shared library using GCC and then install the binaries, header files, and libraries at 
+will configure QMETIS to be built as a shared library using GCC and then install the binaries, header files, and libraries at 
 
 ```
 ~/local/bin
@@ -49,6 +49,8 @@ will configure METIS to be built as a shared library using GCC and then install 
 
 directories, respectively.
 
+QMETIS installs `libqmetis`/`qmetis.h` as the primary package identity and also installs `libmetis`/`metis.h` compatibility aliases. The exported C API remains `METIS_*`, so existing wrappers can continue to load the compatibility library or point `METIS_DLL` at the QMETIS library.
+
 ### Common configuration options are:
 
     cc=[compiler]     - The C compiler to use [default is determined by CMake]
@@ -57,7 +59,7 @@ directories, respectively.
     gklib_path=[PATH] - Set the installation prefix where GKlib has been installed.
                         Pass the prefix itself (e.g., ~/local), not ~/local/lib or
                         ~/local/lib64. You can skip this if GKlib's installation prefix
-                        is the same as that of METIS.
+                        is the same as that of QMETIS.
     i64=1             - Sets to 64 bits the width of the datatype that will store information
                         about the vertices and their adjacency lists. 
     r64=1             - Sets to 64 bits the width of the datatype that will store information 

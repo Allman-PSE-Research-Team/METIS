@@ -59,7 +59,7 @@ static gk_StringMap_t rtype_options[] = {
 static char helpstr[][100] =
 {
 " ",
-"Usage: ndmetis [options] <filename>",
+"Usage: qndmetis [options] <filename>",
 " ",
 " Required parameters",
 "    filename    Stores the graph to be partitioned.",
@@ -143,8 +143,8 @@ static char helpstr[][100] =
 
 static char shorthelpstr[][100] = {
 " ",
-"   Usage: ndmetis [options] <filename>",
-"          use 'ndmetis -help' for a summary of the options.",
+"   Usage: qndmetis [options] <filename>",
+"          use 'qndmetis -help' for a summary of the options.",
 ""
 };
  

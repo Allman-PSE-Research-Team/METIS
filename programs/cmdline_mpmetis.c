@@ -86,7 +86,7 @@ static gk_StringMap_t iptype_options[] = {
 static char helpstr[][100] =
 {
 " ",
-"Usage: mpmetis [options] meshfile nparts",
+"Usage: qmpmetis [options] meshfile nparts",
 " ",
 " Required parameters",
 "    meshfile    Stores the mesh to be partitioned.",
@@ -184,8 +184,8 @@ static char helpstr[][100] =
 
 static char shorthelpstr[][100] = {
 " ",
-"   Usage: mpmetis [options] <filename> <nparts>",
-"          use 'mpmetis -help' for a summary of the options.",
+"   Usage: qmpmetis [options] <filename> <nparts>",
+"          use 'qmpmetis -help' for a summary of the options.",
 ""
 };
  
