@@ -234,7 +234,7 @@ void GPReportResults(params_t *params, graph_t *graph, idx_t *part, idx_t objval
 
   printf("\nTiming Information ----------------------------------------------------------\n");
   printf("  I/O:          \t\t %7.3"PRREAL" sec\n", gk_getcputimer(params->iotimer));
-  printf("  Partitioning: \t\t %7.3"PRREAL" sec   (METIS time)\n", gk_getcputimer(params->parttimer));
+  printf("  Partitioning: \t\t %7.3"PRREAL" sec   (QMETIS time)\n", gk_getcputimer(params->parttimer));
   printf("  Reporting:    \t\t %7.3"PRREAL" sec\n", gk_getcputimer(params->reporttimer));
   printf("\nMemory Information ----------------------------------------------------------\n");
   printf("  Max memory used:\t\t %7.3"PRREAL" MB\n", (real_t)(params->maxmemory/(1024.0*1024.0)));

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(METIS C)
+project(QMETIS C)
 
 include(GNUInstallDirs)
 
@@ -12,9 +12,9 @@ include(CheckIPOSupported)
 check_ipo_supported(RESULT METIS_IPO_SUPPORTED OUTPUT METIS_IPO_MSG)
 if(METIS_IPO_SUPPORTED)
   set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
-  message(STATUS "METIS: interprocedural optimization (LTO) enabled")
+  message(STATUS "QMETIS: interprocedural optimization (LTO) enabled")
 else()
-  message(STATUS "METIS: IPO/LTO not supported: ${METIS_IPO_MSG}")
+  message(STATUS "QMETIS: IPO/LTO not supported: ${METIS_IPO_MSG}")
 endif()
 set(SHARED FALSE CACHE BOOL "build a shared library")
 
@@ -24,7 +24,7 @@ else()
   set(METIS_INSTALL TRUE)
 endif()
 
-# Configure libmetis library.
+# Configure QMETIS library artifacts.
 if(SHARED)
   set(METIS_LIBRARY_TYPE SHARED)
 else()
@@ -33,7 +33,7 @@ endif(SHARED)
 
 include(./conf/gkbuild.cmake)
 
-# METIS' custom options
+# QMETIS' custom options
 #option(IDX64 "enable 64 bit ints" OFF)
 #option(REAL64 "enable 64 bit floats (i.e., double)" OFF)
 #if(IDX64)
